@@ -35,26 +35,32 @@ end
 
 function object:update(dt)
     if self.movable then
+        
         -- X Axis Movement
         -- left movement
-        if love.keyboard.wasPressed('a') or love.keyboard.wasPressed('left') then
-            self.dx = self.dx + VELOCITY * dt 
-            self.x = self.x - self.dx
+        if love.keyboard.isDown('a') or love.keyboard.isDown('left') then
+            self.dx = self.dx + (VELOCITY * self.vmultiplier) * dt 
+            self.x = math.max(0, self.x - self.dx)
+
 
         -- right movement
-        elseif love.keyboard.wasPressed('d') or love.keyboard.wasPressed('right') then
-            self.dx = self.dx + VELOCITY * dt
-            self.x = self.x + self.dx
+        elseif love.keyboard.isDown('d') or love.keyboard.isDown('right') then
+            self.dx = self.dx + (VELOCITY * self.vmultiplier) * dt
+            self.x = math.min(WINDOW_WIDTH - self.width, self.x + self.dx)
         end
 
         -- Y Axis Movement
-        if love.keyboard.wasPressed('w') or love.keyboard.wasPressed('up') then
-            self.dy = self.dy + VELOCITY * dt
-            self.y = self.y - self.dy
-        elseif love.keyboard.wasPressed('s') or love.keyboard.wasPressed('down') then
-            self.dy = self.dy + VELOCITY * dt
-            self.y = self.y + self.dy
+        -- up movement
+        if love.keyboard.isDown('w') or love.keyboard.isDown('up') then
+            self.dy = self.dy + (VELOCITY * self.vmultiplier) * dt
+            self.y = math.max(0, self.y - self.dy)
+            
+        -- down movement
+        elseif love.keyboard.isDown('s') or love.keyboard.isDown('down') then
+            self.dy = self.dy + (VELOCITY * self.vmultiplier) * dt
+            self.y = math.min(WINDOW_HEIGHT - self.height, self.y - self.dy)
         end
+        
         -- reset all delta X and delta Y values for not flushing the velocity of movement each frame passed
         self.dx = 0
         self.dy = 0
